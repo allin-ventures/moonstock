@@ -20,6 +20,8 @@ const install = async (db) => {
 
     await createCollection("curatedStocks", db)
 
+    await createCollection("stockProgress", db)
+
     await createCollection("stockPredictions", db)
 
     await createCollection("users", db)

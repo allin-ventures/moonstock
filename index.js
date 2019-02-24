@@ -2,9 +2,18 @@ const fs = require('fs');
 
 const express = require('express');
 
+const bodyParser = require('body-parser');
+
 const app = express();
 const portString = process.env.PORT || '3000';
 const port = parseInt(portString, 10);
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+
+// parse application/json
+app.use(bodyParser.json())
+
 
 app.get('/ping', (req, res) => res.send('ok'));
 
@@ -28,5 +37,15 @@ app.get('/next', (req, res) => {
         },
     ]);
 });
+
+
+app.post('/action', async (req, res) => {
+
+    const {userToken, symbol, action} = req.body; 
+
+
+    res.body = {userToken, symbol, action};
+
+})
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
