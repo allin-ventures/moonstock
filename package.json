@@ -9,6 +9,7 @@
   "author": "Allin Ventures",
   "license": "Apache-2.0",
   "dependencies": {
+    "axios": "^0.18.0",
     "express": "^4.16.4",
     "mongodb": "^3.1.13"
   }

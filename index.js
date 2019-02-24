@@ -16,6 +16,7 @@ app.get('/next', (req, res) => {
         {
             symbol: "GOOG",
             logo: sampleImageUrl,
+            progress: 0.42,
             prediction: {
                 graph: [
                     {x: 1, y: 1},
