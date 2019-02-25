@@ -2,6 +2,8 @@ const fs = require('fs');
 
 const express = require('express');
 
+const bearerToken = require('express-bearer-token');
+
 const bodyParser = require('body-parser');
 
 const app = express();
@@ -45,7 +47,7 @@ app.post('/action', async (req, res) => {
     const {userToken, symbol, action} = req.body; 
 
 
-    res.body = {userToken, symbol, action};
+    return res.status(200).json( {userToken, symbol, action});
 
 })
 
