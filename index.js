@@ -48,6 +48,8 @@ app.get('/meta', async (req, res) => {
     if (!req.token !== token)
      return res.status(403).json({error: "UNAUTH"})
 
+    console.log("Sending config to app")
+
     return res.state(200).json({
         stripe : {
             publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
