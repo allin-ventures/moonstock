@@ -1,6 +1,8 @@
 const fs = require('fs');
 
 const express = require('express');
+const bearerToken = require('express-bearer-token');
+
 const bodyParser = require('body-parser');
 
 const yahoo = require('./lib/yahoo.js');
@@ -15,10 +17,14 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
+app.use(bearerToken());
 
 app.get('/ping', (req, res) => res.send('ok'));
 
 app.get('/next', async (req, res) => {
+    if (!req.token)
+     return res.status(403).json({error: "UNAUTH"})
+
     const sampleImage = fs.readFileSync('google.png');
     const sampleImageEncoded = new Buffer.from(sampleImage).toString('base64');
     const sampleImageUrl = `data:image/png;base64,${sampleImageEncoded}`;
@@ -39,10 +45,12 @@ app.get('/next', async (req, res) => {
 
 app.post('/action', async (req, res) => {
 
-    const {userToken, symbol, action} = req.body;
+    if (!req.token)
+       return res.status(403).json({error: "UNAUTH"})
 
+    const {userToken, symbol, action} = req.body; 
 
-    res.body = {userToken, symbol, action};
+    return res.status(200).json( {userToken, symbol, action});
 
 })
 
