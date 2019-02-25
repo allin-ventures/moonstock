@@ -2,9 +2,12 @@ var MongoClient = require('mongodb').MongoClient;
 
 
 
+
 // Database Name
 const dbName = 'moonstock';
-var url = "mongodb://root:example@localhost:27017/";
+const CREDS = process.env.MONGOCREDS || 'root:example@';
+
+var url = `mongodb://${creds}localhost:27017/`;
 const assert = require('assert')
 
 const createCollection = (collName, dbo) => {

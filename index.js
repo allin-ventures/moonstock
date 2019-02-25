@@ -6,6 +6,11 @@ const bearerToken = require('express-bearer-token');
 
 const bodyParser = require('body-parser');
 
+const stripe = require('stripe')('sk_live_klNhym61uLZ9uN8YbzQV2gmm');
+
+
+
+
 const app = express();
 const portString = process.env.PORT || '3000';
 const port = parseInt(portString, 10);
