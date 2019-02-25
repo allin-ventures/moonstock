@@ -37,7 +37,7 @@ app.post('/cc',  (req, res) => {
     console.log(token)
     stripe.customers.create({
         description: 'Customer for jenny.rosen@example.com',
-        source: token // obtained with Stripe.js
+        source: token.tokenId // obtained with Stripe.js
       }, function(err, customer) {
         // asynchronously called
         if (err)
