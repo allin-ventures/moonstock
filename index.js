@@ -13,6 +13,8 @@ const stripe = require('stripe')(process.env.STRIPE_KEY);
 
 const yahoo = require('./lib/yahoo.js');
 
+const crypto = require('crypto');
+
 const app = express();
 const portString = process.env.PORT || '3000';
 const port = parseInt(portString, 10);
@@ -26,6 +28,33 @@ app.use(bodyParser.json())
 app.use(bearerToken());
 
 app.get('/ping', (req, res) => res.send('ok'));
+
+// Make a guard incase env var is not there
+const metaConfigGuard = async () => {
+
+    return new Promise( (res, rej) => {
+        crypto.randomBytes(48, function(err, buffer) {
+            const token = buffer.toString('hex');
+           // console.log(token)
+            res(token)
+        });
+    });
+    
+}
+
+
+app.get('/meta', async (req, res) => {
+    const token = process.env.SECURE_TOKEN || await metaConfigGuard();
+    if (!req.token !== token)
+     return res.status(403).json({error: "UNAUTH"})
+
+    return res.state(200).json({
+        stripe : {
+            publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
+            merchantId: process.env.STRIPE_MERCHANT_KEY,
+        }
+    })
+})
 
 app.get('/next', async (req, res) => {
     if (!req.token)
