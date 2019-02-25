@@ -30,13 +30,11 @@ app.use(bearerToken());
 app.get('/ping', (req, res) => res.send('ok'));
 
 
-
-
 app.get('/meta', async (req, res) => {
 
     console.log("Sending config to app")
 
-    return res.state(200).json({
+    return res.status(200).json({
         stripe : {
             publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
             merchantId: process.env.STRIPE_MERCHANT_KEY,
