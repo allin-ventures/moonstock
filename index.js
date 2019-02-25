@@ -30,6 +30,22 @@ app.use(bearerToken());
 app.get('/ping', (req, res) => res.send('ok'));
 
 
+app.post('/cc',  (req, res) => {
+
+
+    const {token} = req.body; 
+    stripe.customers.create({
+        description: 'Customer for jenny.rosen@example.com',
+        source: token // obtained with Stripe.js
+      }, function(err, customer) {
+        // asynchronously called
+        if (err)
+            console.error(err)
+        console.log(customer)
+     });
+})
+
+
 app.get('/meta', async (req, res) => {
 
     console.log("Sending config to app")
