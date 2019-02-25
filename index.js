@@ -29,24 +29,10 @@ app.use(bearerToken());
 
 app.get('/ping', (req, res) => res.send('ok'));
 
-// Make a guard incase env var is not there
-const metaConfigGuard = async () => {
 
-    return new Promise( (res, rej) => {
-        crypto.randomBytes(48, function(err, buffer) {
-            const token = buffer.toString('hex');
-           // console.log(token)
-            res(token)
-        });
-    });
-    
-}
 
 
 app.get('/meta', async (req, res) => {
-    const token = process.env.SECURE_TOKEN || await metaConfigGuard();
-    if (!req.token !== token)
-     return res.status(403).json({error: "UNAUTH"})
 
     console.log("Sending config to app")
 
