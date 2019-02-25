@@ -34,6 +34,7 @@ app.post('/cc',  (req, res) => {
 
 
     const {token} = req.body; 
+    console.log(token)
     stripe.customers.create({
         description: 'Customer for jenny.rosen@example.com',
         source: token // obtained with Stripe.js
