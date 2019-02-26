@@ -1,9 +1,11 @@
-const fs = require('fs');
+
 
 const express = require('express');
 const bearerToken = require('express-bearer-token');
 
 const bodyParser = require('body-parser');
+
+
 
 if (!process.env.STRIPE_KEY) {
     console.warn("STRIPE KEY IS MISSING")
@@ -11,7 +13,7 @@ if (!process.env.STRIPE_KEY) {
 
 const MongoClient = require('mongodb').MongoClient;
 
-const MONGO_URL = process.env.MONGO_URL || 'mongodb://localhost:27017/moonstock';
+const MONGO_URL = 'mongodb://root:example@localhost:27017';
 
 
 // Create a new MongoClient
@@ -21,12 +23,19 @@ const stripe = require('stripe')(process.env.STRIPE_KEY);
 
 const yahoo = require('./lib/yahoo.js');
 
+const Store = require('./lib/store.js')
+
+
+const store = new Store();
+
 
 client.connect(function (mongoErr) {
     if (mongoErr)
         console.error("CANNOT CONNECT TO MONGO", mongoErr)
     else {
         console.log("Mongo connected")
+
+        store.setClient(client);
 
         const app = express();
         const portString = process.env.PORT || '3000';
@@ -45,12 +54,18 @@ client.connect(function (mongoErr) {
         app.post('/createUser', (req, res) => {
             const { email } = req.body;
 
-            // If email don't exist make user
-            const token = "5"
+            console.log("Creating user for email:", email)
 
-            return res.status(200).json({
-                token
+            store.createUser({email}).then((user) => {
+                
+                return res.status(200).json({token: user.token})
+            }).catch((err) => {
+                return res.status(403).json({
+                    error: "FAILED_TO_CREATE",
+                    err
+                })
             })
+     
         })
 
         app.post('/cc', (req, res) => {
@@ -62,7 +77,7 @@ client.connect(function (mongoErr) {
             const { token, metadata } = req.body;
 
             metadata["moonstockId"] = 42;
-            
+
             // if email exists don't   
             stripe.customers.create({
                 description: 'Customer for ' + email,
